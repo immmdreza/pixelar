@@ -45,7 +45,7 @@ impl<const H: usize, const W: usize> FreeDrawing<H, W> {
         self
     }
 
-    pub fn start_drawing<P: ToPosition>(&mut self, pos: P) -> &mut FreeDrawing<H, W> {
+    pub fn start_drawing<P: ToPosition<H, W>>(&mut self, pos: P) -> &mut FreeDrawing<H, W> {
         self.cursor_position = pos.get_position();
         self.mark_cursor_position().unwrap();
         self

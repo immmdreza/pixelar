@@ -1,28 +1,28 @@
 use std::cmp::Ordering;
 
-pub trait ToPosition {
+pub trait ToPosition<const H: usize, const W: usize> {
     fn get_position(self) -> Position;
 }
 
-impl ToPosition for Position {
+impl<const H: usize, const W: usize> ToPosition<H, W> for Position {
     fn get_position(self) -> Position {
         self
     }
 }
 
-impl ToPosition for [usize; 2] {
+impl<const H: usize, const W: usize> ToPosition<H, W> for [usize; 2] {
     fn get_position(self) -> Position {
         (self[0], self[1]).into()
     }
 }
 
-impl ToPosition for (usize, usize) {
+impl<const H: usize, const W: usize> ToPosition<H, W> for (usize, usize) {
     fn get_position(self) -> Position {
         self.into()
     }
 }
 
-impl ToPosition for usize {
+impl<const H: usize, const W: usize> ToPosition<H, W> for usize {
     fn get_position(self) -> Position {
         (self, self).into()
     }
@@ -153,27 +153,21 @@ impl Default for RelativePosition {
 }
 
 impl RelativePosition {
-    pub fn get_exact<P: ToPosition>(&self, pos: P, scale: usize) -> Option<Position> {
+    pub fn get_exact(&self, pos: Position, scale: usize) -> Option<Position> {
         match self {
-            RelativePosition::Right => pos.get_position().right(scale),
-            RelativePosition::RightDown => pos.get_position().right_down(scale),
-            RelativePosition::Down => pos.get_position().down(scale),
-            RelativePosition::LeftDown => pos.get_position().left_down(scale),
-            RelativePosition::Left => pos.get_position().left(scale),
-            RelativePosition::LeftTop => pos.get_position().left_top(scale),
-            RelativePosition::Top => pos.get_position().top(scale),
-            RelativePosition::RightTop => pos.get_position().right_top(scale),
-            RelativePosition::Same => Some(pos.get_position()),
+            RelativePosition::Right => pos.right(scale),
+            RelativePosition::RightDown => pos.right_down(scale),
+            RelativePosition::Down => pos.down(scale),
+            RelativePosition::LeftDown => pos.left_down(scale),
+            RelativePosition::Left => pos.left(scale),
+            RelativePosition::LeftTop => pos.left_top(scale),
+            RelativePosition::Top => pos.top(scale),
+            RelativePosition::RightTop => pos.right_top(scale),
+            RelativePosition::Same => Some(pos),
         }
     }
 
-    pub fn get_relative_pos<P1: ToPosition, P2: ToPosition>(
-        pos1: P1,
-        pos2: P2,
-    ) -> RelativePosition {
-        let pos1 = pos1.get_position();
-        let pos2 = pos2.get_position();
-
+    pub fn get_relative_pos(pos1: Position, pos2: Position) -> RelativePosition {
         if pos2.row > pos1.row {
             match pos2.column.cmp(&pos1.column) {
                 Ordering::Less => RelativePosition::LeftDown,
@@ -195,12 +189,10 @@ impl RelativePosition {
         }
     }
 
-    pub fn get_surrounding_relative_pos<P1: ToPosition, P2: ToPosition>(
-        pos1: P1,
-        pos2: P2,
+    pub fn get_surrounding_relative_pos(
+        pos1: Position,
+        pos2: Position,
     ) -> Option<RelativePosition> {
-        let pos1 = pos1.get_position();
-        let pos2 = pos2.get_position();
         use RelativePosition::*;
 
         if pos2.row == pos1.row {

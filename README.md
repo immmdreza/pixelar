@@ -95,7 +95,7 @@ Run the code and check the result.
 This was the whole idea! There're more methods to make your job easier.
 
 ``` rust
-use pixelar::prelude::*;
+use pixelar::{colors::*, positions::*, prelude::*};
 
 fn main() {
     let mut pixel_paper = PixelPaper::<6, 6>::default();
@@ -121,11 +121,10 @@ fn main() {
         }
     }
 
-    pixel_paper.draw_straight_line((255, 0, 0), (0, 5), (5, 0));
+    pixel_paper.draw_straight_line(Red, RightTopEdge, LeftBottomEdge);
 
     pixel_paper.save("arts/simple_2.png").unwrap()
 }
-
 ```
 
 Here's the result:

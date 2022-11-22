@@ -8,7 +8,11 @@ pub struct StraightLine<const H: usize, const W: usize> {
 }
 
 impl<const H: usize, const W: usize> StraightLine<H, W> {
-    pub fn new<P1: ToPosition, P2: ToPosition>(color: PixelDescriptor, start: P1, end: P2) -> Self {
+    pub fn new<P1: ToPosition<H, W>, P2: ToPosition<H, W>>(
+        color: PixelDescriptor,
+        start: P1,
+        end: P2,
+    ) -> Self {
         let mut t = Self {
             start: start.get_position(),
             end: end.get_position(),
@@ -23,7 +27,7 @@ impl<const H: usize, const W: usize> StraightLine<H, W> {
         t
     }
 
-    pub fn from_color<C: ColorSelector, P1: ToPosition, P2: ToPosition>(
+    pub fn from_color<C: ColorSelector, P1: ToPosition<H, W>, P2: ToPosition<H, W>>(
         color: C,
         start: P1,
         end: P2,
@@ -35,7 +39,7 @@ impl<const H: usize, const W: usize> StraightLine<H, W> {
         DDALine::new(self.start, self.end)
     }
 
-    pub fn continue_with<P: ToPosition + Clone>(
+    pub fn continue_with<P: ToPosition<H, W> + Clone>(
         &mut self,
         other_end: P,
     ) -> &mut StraightLine<H, W> {

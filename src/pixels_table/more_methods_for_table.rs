@@ -6,7 +6,7 @@ use crate::{
 use super::{surrounding_pixels::SurroundingPixels, ColorSelector, PixelDescriptor, PixelsTable};
 
 pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable<H, W> {
-    fn change_pixel_color<P: ToPosition, C1: ColorSelector>(&mut self, pos: P, color: C1) {
+    fn change_pixel_color<P: ToPosition<H, W>, C1: ColorSelector>(&mut self, pos: P, color: C1) {
         if let Ok(pix) = self.get_mut_pixel_at(pos.get_position()) {
             *pix = color.get_rgb().into()
         }
@@ -19,7 +19,7 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         SurroundingPixels::new(self, *pos)
     }
 
-    fn boundary_fill<P: ToPosition, C1: ColorSelector + Clone>(
+    fn boundary_fill<P: ToPosition<H, W>, C1: ColorSelector + Clone>(
         &mut self,
         pos: P,
         fill_color: PixelDescriptor,
@@ -116,7 +116,7 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         }
     }
 
-    fn boundary_fill_color<P: ToPosition, C1: ColorSelector, C2: ColorSelector + Clone>(
+    fn boundary_fill_color<P: ToPosition<H, W>, C1: ColorSelector, C2: ColorSelector + Clone>(
         &mut self,
         pos: P,
         fill_color: C1,
@@ -131,7 +131,7 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         )
     }
 
-    fn draw_straight_line<C: ColorSelector, P1: ToPosition, P2: ToPosition>(
+    fn draw_straight_line<C: ColorSelector, P1: ToPosition<H, W>, P2: ToPosition<H, W>>(
         &mut self,
         color: C,
         start: P1,
@@ -141,7 +141,7 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         self.draw_exactly_from(&line)
     }
 
-    fn draw_many_straight_lines<C: ColorSelector, P1: ToPosition, P2: ToPosition>(
+    fn draw_many_straight_lines<C: ColorSelector, P1: ToPosition<H, W>, P2: ToPosition<H, W>>(
         &mut self,
         color: C,
         start: P1,

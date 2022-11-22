@@ -1,6 +1,10 @@
 pub mod colors;
 pub mod drawings;
-pub mod pixel_paper;
+mod pixel_paper;
 pub mod pixels_table;
-pub mod position;
+mod position;
+pub mod positions;
 pub mod prelude;
+
+pub use self::pixel_paper::PixelPaper;
+pub use self::position::{Position, RelativePosition, ToPosition};
