@@ -1,4 +1,4 @@
-use pixelar::prelude::*;
+use pixelar::{colors::*, prelude::*};
 
 fn main() {
     let mut pixel_paper = PixelPaper::<6, 6>::default();
@@ -24,7 +24,7 @@ fn main() {
         }
     }
 
-    pixel_paper.draw_straight_line((255, 0, 0), (0, 5), (5, 0));
+    pixel_paper.draw_straight_line(Red, (0, 5), (5, 0));
 
     pixel_paper.save("arts/simple_2.png").unwrap()
 }
