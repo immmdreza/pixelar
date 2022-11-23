@@ -51,13 +51,13 @@ impl<'t, const H: usize, const W: usize, P: PixelsTable<H, W>> Iterator
 
 #[cfg(test)]
 mod tests {
-    use crate::pixels_table::simple_table::SimpleTable;
+    use crate::pixels_table::canvas::Canvas;
 
     use super::*;
 
     #[test]
     fn test_name() {
-        let mut table = SimpleTable::<5, 5>::default();
+        let mut table = Canvas::<5, 5>::default();
         let it = table.get_mut_table();
 
         it[1][1] = [1, 1, 1].into();
