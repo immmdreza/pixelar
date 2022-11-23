@@ -1,17 +1,20 @@
 use crate::{
     drawings::special::FreeDrawing,
-    prelude::{MoreMethodsForPixelsTable, PixelDescriptor, PixelsTable},
+    pixels_table::DrawingContext,
+    prelude::{Drawable, MoreMethodsForPixelsTable, PixelsTable},
 };
 
-pub struct Chico {
-    table: [[PixelDescriptor; 40]; 40],
+pub struct Chico;
+
+impl Default for Chico {
+    fn default() -> Self {
+        Self
+    }
 }
 
-impl Chico {
-    pub fn new() -> Self {
-        let mut chico = Self {
-            table: Self::get_default_table(),
-        };
+impl Drawable<40, 40> for Chico {
+    fn setup(&self, drawing_ctx: &mut DrawingContext<40, 40>) {
+        let chico = drawing_ctx.canvas_mut();
 
         let border_color = [79, 48, 17];
         let mut borders = FreeDrawing::new(border_color);
@@ -389,23 +392,5 @@ impl Chico {
         });
 
         // Congrats 🧁
-
-        chico
-    }
-}
-
-impl Default for Chico {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl PixelsTable<40, 40> for Chico {
-    fn get_table(&self) -> &[[PixelDescriptor; 40]; 40] {
-        &self.table
-    }
-
-    fn get_mut_table(&mut self) -> &mut [[PixelDescriptor; 40]; 40] {
-        &mut self.table
     }
 }

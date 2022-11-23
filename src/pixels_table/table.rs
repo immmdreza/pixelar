@@ -72,16 +72,17 @@ pub trait PixelsTable<const H: usize, const W: usize> {
         self.draw_from(pixel_table, (0, 0))
     }
 
-    fn draw_from_drawable<const H1: usize, const W1: usize, D: Drawable<H, W, H1, W1>>(
+    fn draw<const H1: usize, const W1: usize, D: Drawable<H1, W1>, P: ToPosition<H, W>>(
         &mut self,
         drawable: D,
+        pos: P,
     ) where
         Self: Sized,
     {
         let mut drawing_ctx = DrawingContext::default();
         drawable.setup(&mut drawing_ctx);
 
-        self.draw_from(drawing_ctx.canvas(), drawing_ctx.draw_pos());
+        self.draw_from(drawing_ctx.canvas(), pos);
     }
 
     fn draw_on<const H1: usize, const W1: usize, P: PixelsTable<H1, W1>, P1: ToPosition<H1, W1>>(
