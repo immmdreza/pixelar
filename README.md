@@ -130,3 +130,5 @@ fn main() {
 Here's the result:
 
 ![Alt text](arts/simple_2.png)
+
+_Pixelar is a work in progress and it's not completed yet!_
