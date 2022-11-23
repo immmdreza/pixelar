@@ -4,7 +4,7 @@ Show everyone the art hidden inside your code 🧁
 
 ![Alt text](arts/chico.png)
 
-_Codes for this piece of pixel art can be found [here](src\drawings\custom\chico.rs) (It's a copy of a picture on pin)._
+_Code for this piece of pixel art can be found [here](src\drawings\custom\chico.rs) (It's a copy of a picture on pin)._
 
 ## What
 
@@ -12,7 +12,7 @@ Pixelar is a package that provides you simple API to create pixel arts using rus
 
 - The main purposes of this package is for **Learning purposes and turning the code to something visual** so it may become easier to understand.
 
-- It can also be use for creating unique pixel arts and FUN.
+- It can also be used for creating unique pixel arts and FUN.
 
 ### Dependencies
 
@@ -48,16 +48,16 @@ fn main() {
 
 You're given a 10*10 2D array of `PixelDescriptor`.
 
-A `PixelDescriptor`, describes a pixel at the specified position. It's simple enum that has two variants:
+A `PixelDescriptor`, describes a pixel at the specified position. It's a simple enum with only two variants:
 
 ``` rust
 pub enum PixelDescriptor {
     Nothing, // Nothing there
-    Pixel(Pixel), // A pixel with the specified color.
+    Pixel(Pixel), // A pixel with some color.
 }
 ```
 
-Now you can do whatever you want with pixels.
+Now you can do whatever you want on the pixels.
 
 ``` rust
     // ---- sniff ----
@@ -92,7 +92,7 @@ Run the code and check the result.
 
 ![Alt text](arts/simple_1.png)
 
-This was the whole idea! There're more methods to make your job easier.
+This was the whole idea! But there're more ...
 
 ``` rust
 use pixelar::{colors::*, positions::*, prelude::*};
