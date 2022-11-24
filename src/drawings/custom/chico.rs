@@ -237,7 +237,7 @@ impl Drawable<40, 40> for Chico {
             .go_left_up(1)
             .go_up(2);
 
-        chico.draw_exactly_from(&borders);
+        chico.draw_from_table_exact(&borders);
 
         let yellow = [255, 235, 153];
         chico.boundary_fill_color((11, 2), yellow, border_color, false);

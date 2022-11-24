@@ -16,7 +16,7 @@ impl<const H: usize, const W: usize> StraightLine<H, W> {
         let mut t = Self {
             start: start.get_position(),
             end: end.get_position(),
-            table: Self::get_default_table(),
+            table: Self::default_table(),
             color,
         };
 
@@ -32,7 +32,7 @@ impl<const H: usize, const W: usize> StraightLine<H, W> {
         start: P1,
         end: P2,
     ) -> Self {
-        Self::new(color.get_rgb().into(), start, end)
+        Self::new(color.rgb().into(), start, end)
     }
 
     pub fn get_dda_line(&self) -> DDALine {
@@ -43,7 +43,7 @@ impl<const H: usize, const W: usize> StraightLine<H, W> {
         &mut self,
         other_end: P,
     ) -> &mut StraightLine<H, W> {
-        self.draw_exactly_from(&StraightLine::new(self.color, self.end, other_end.clone()));
+        self.draw_from_table_exact(&StraightLine::new(self.color, self.end, other_end.clone()));
         self.end = other_end.get_position();
 
         self
@@ -51,11 +51,11 @@ impl<const H: usize, const W: usize> StraightLine<H, W> {
 }
 
 impl<const H: usize, const W: usize> PixelsTable<H, W> for StraightLine<H, W> {
-    fn get_table(&self) -> &[[PixelDescriptor; H]; W] {
+    fn table(&self) -> &[[PixelDescriptor; H]; W] {
         &self.table
     }
 
-    fn get_mut_table(&mut self) -> &mut [[PixelDescriptor; H]; W] {
+    fn table_mut(&mut self) -> &mut [[PixelDescriptor; H]; W] {
         &mut self.table
     }
 }

@@ -31,11 +31,11 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
         C2: ColorSelector,
     {
         Self {
-            pixels_table: Self::get_default_table(),
+            pixels_table: Self::default_table(),
             block_width,
-            background: background.get_rgb(),
+            background: background.rgb(),
             separator_width,
-            separator_color: separator_color.get_rgb(),
+            separator_color: separator_color.rgb(),
         }
     }
 
@@ -58,7 +58,7 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
         draw_filled_rect_mut(
             &mut image,
             Rect::at(0, 0).of_size(width as u32, height as u32),
-            self.background.get_rgb(),
+            self.background.rgb(),
         );
 
         for i in 0..separators_count_in_width as i32 {
@@ -66,7 +66,7 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
                 &mut image,
                 Rect::at(i * ((separator_pixel_length + self.block_width) as i32), 0)
                     .of_size(separator_pixel_length as u32, height as u32),
-                self.separator_color.get_rgb(),
+                self.separator_color.rgb(),
             )
         }
 
@@ -75,7 +75,7 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
                 &mut image,
                 Rect::at(0, i * ((separator_pixel_length + self.block_width) as i32))
                     .of_size(width as u32, separator_pixel_length as u32),
-                self.separator_color.get_rgb(),
+                self.separator_color.rgb(),
             )
         }
 
@@ -109,7 +109,7 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
     }
 
     fn draw_pixels_table(&self, image: &mut ImageBuffer<Rgb<u8>, Vec<u8>>) {
-        let other_table = *self.get_table();
+        let other_table = *self.table();
 
         for (i, row) in other_table.iter().enumerate() {
             for (j, pixel) in row.iter().enumerate() {
@@ -128,11 +128,11 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
 }
 
 impl<const H: usize, const W: usize> PixelsTable<H, W> for PixelPaper<H, W> {
-    fn get_table(&self) -> &[[PixelDescriptor; H]; W] {
+    fn table(&self) -> &[[PixelDescriptor; H]; W] {
         &self.pixels_table
     }
 
-    fn get_mut_table(&mut self) -> &mut [[PixelDescriptor; H]; W] {
+    fn table_mut(&mut self) -> &mut [[PixelDescriptor; H]; W] {
         &mut self.pixels_table
     }
 }

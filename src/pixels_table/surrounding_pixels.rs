@@ -33,7 +33,7 @@ impl<'t, const H: usize, const W: usize, P: PixelsTable<H, W>> Iterator
             self.cur_rel_position = self.cur_rel_position.next()?;
             let abs_pos = self.cur_rel_position.get_exact(self.requested_point, 1);
             if let Some(abs_pos) = abs_pos {
-                if let Ok(pix) = self.table.get_pixel_at(abs_pos) {
+                if let Ok(pix) = self.table.pixel_at(abs_pos) {
                     if pix.is_pixel() {
                         Some((self.cur_rel_position, abs_pos))
                     } else {
@@ -58,7 +58,7 @@ mod tests {
     #[test]
     fn test_name() {
         let mut table = Canvas::<5, 5>::default();
-        let it = table.get_mut_table();
+        let it = table.table_mut();
 
         it[1][1] = [1, 1, 1].into();
         it[3][3] = [1, 1, 1].into();

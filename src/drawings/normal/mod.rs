@@ -7,7 +7,7 @@ pub struct Point(RgbColor);
 
 impl Point {
     pub fn new<C: ColorSelector>(color: C) -> Self {
-        Self(color.get_rgb_color())
+        Self(color.rgb_color())
     }
 }
 

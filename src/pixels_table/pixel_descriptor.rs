@@ -60,7 +60,7 @@ where
     T: ColorSelector,
 {
     fn from(cs: T) -> Self {
-        Self::new(cs.get_rgb())
+        Self::new(cs.rgb())
     }
 }
 
@@ -75,6 +75,6 @@ where
     T: ColorSelector,
 {
     fn from(cs: T) -> Self {
-        Pixel::new(cs.get_rgb()).into()
+        Pixel::new(cs.rgb()).into()
     }
 }

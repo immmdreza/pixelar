@@ -14,8 +14,8 @@ pub struct FreeDrawing<const H: usize, const W: usize> {
 impl<const H: usize, const W: usize> FreeDrawing<H, W> {
     pub fn new<C: ColorSelector>(color: C) -> FreeDrawing<H, W> {
         Self {
-            table: Self::get_default_table(),
-            color: color.get_rgb().into(),
+            table: Self::default_table(),
+            color: color.rgb().into(),
             pen_down: true,
             cursor_position: Default::default(),
         }
@@ -140,17 +140,17 @@ impl<const H: usize, const W: usize> FreeDrawing<H, W> {
         let mut branch = self.get_branch();
         setup_branch(&mut branch);
 
-        self.draw_exactly_from(&branch);
+        self.draw_from_table_exact(&branch);
         self
     }
 }
 
 impl<const H: usize, const W: usize> PixelsTable<H, W> for FreeDrawing<H, W> {
-    fn get_table(&self) -> &[[PixelDescriptor; H]; W] {
+    fn table(&self) -> &[[PixelDescriptor; H]; W] {
         &self.table
     }
 
-    fn get_mut_table(&mut self) -> &mut [[PixelDescriptor; H]; W] {
+    fn table_mut(&mut self) -> &mut [[PixelDescriptor; H]; W] {
         &mut self.table
     }
 }

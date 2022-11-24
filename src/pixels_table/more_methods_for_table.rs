@@ -3,16 +3,19 @@ use crate::{
     prelude::{Position, RelativePosition, ToPosition},
 };
 
-use super::{surrounding_pixels::SurroundingPixels, ColorSelector, PixelDescriptor, PixelsTable};
+use super::{
+    surrounding_pixels::SurroundingPixels, ColorSelector, PixelDescriptor, PixelsTable,
+    RectSelection,
+};
 
 pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable<H, W> {
     fn change_pixel_color<P: ToPosition<H, W>, C1: ColorSelector>(&mut self, pos: P, color: C1) {
-        if let Ok(pix) = self.get_mut_pixel_at(pos.get_position()) {
-            *pix = color.get_rgb().into()
+        if let Ok(pix) = self.pixel_at_mut(pos.get_position()) {
+            *pix = color.rgb().into()
         }
     }
 
-    fn get_surrounding_pixels(&self, pos: &Position) -> SurroundingPixels<H, W, Self>
+    fn surrounding_pixels(&self, pos: &Position) -> SurroundingPixels<H, W, Self>
     where
         Self: Sized,
     {
@@ -27,9 +30,9 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         dimensional_penetration: bool,
     ) {
         let pos = pos.get_position();
-        let bc = boundary_color.get_rgb();
+        let bc = boundary_color.rgb();
 
-        let pix = match self.get_mut_pixel_at(pos) {
+        let pix = match self.pixel_at_mut(pos) {
             Ok(pix) => pix,
             Err(_) => return,
         };
@@ -125,7 +128,7 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
     ) {
         self.boundary_fill(
             pos,
-            fill_color.get_rgb().into(),
+            fill_color.rgb().into(),
             boundary_color,
             dimensional_penetration,
         )
@@ -138,7 +141,7 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         end: P2,
     ) {
         let line = StraightLine::from_color(color, start, end);
-        self.draw_exactly_from(&line)
+        self.draw_from_table_exact(&line)
     }
 
     fn draw_many_straight_lines<C: ColorSelector, P1: ToPosition<H, W>, P2: ToPosition<H, W>>(
@@ -151,7 +154,7 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         let mut line = StraightLine::from_color(color, start, end);
         builder(&mut line);
 
-        self.draw_exactly_from(&line)
+        self.draw_from_table_exact(&line)
     }
 
     fn draw_free_drawing<C: ColorSelector>(
@@ -162,6 +165,17 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         let mut free_drawing = FreeDrawing::new(color);
         builder(&mut free_drawing);
 
-        self.draw_exactly_from(&free_drawing)
+        self.draw_from_table_exact(&free_drawing)
+    }
+
+    fn rect_selection<P1: ToPosition<H, W>, P2: ToPosition<H, W>>(
+        &mut self,
+        start: P1,
+        end: P2,
+    ) -> RectSelection<H, W, Self>
+    where
+        Self: Sized,
+    {
+        RectSelection::new(self, start, end)
     }
 }
