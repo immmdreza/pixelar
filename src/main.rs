@@ -1,12 +1,17 @@
-use pixelar::{
-    colors::*, drawings::normal::Point, pixels_table::Selection, positions::*, prelude::*,
-};
+use pixelar::{colors::*, prelude::*};
 
 fn main() {
-    let mut pixel_paper = PixelPaper::<5, 5>::default();
+    let mut paper = PixelPaper::<5, 5>::default();
+    let mut animation = PixelBook::new(Repeat::Infinite);
 
-    let mut selection = pixel_paper.rect_selection(LeftTopEdge, (3, 3));
-    selection.apply_color(Black);
+    animation.add_paper(&paper);
 
-    pixel_paper.save("arts/simple_3.png").unwrap()
+    for i in 0..5 {
+        paper.change_pixel_color((i, i), Red);
+        paper.change_pixel_color((i, 4 - i), Blue);
+
+        animation.add_paper(&paper);
+    }
+
+    animation.save("arts/animated_1.gif").unwrap();
 }

@@ -1,10 +1,15 @@
-use image::Rgb;
+use image::{Rgb, Rgba};
 
 pub trait ColorSelector {
     fn rgb_codes(&self) -> [u8; 3];
 
     fn rgb(&self) -> Rgb<u8> {
         self.rgb_codes().into()
+    }
+
+    fn rgba(&self) -> Rgba<u8> {
+        let codes = self.rgb_codes();
+        Rgba([codes[0], codes[1], codes[2], 255])
     }
 
     fn rgb_color(&self) -> RgbColor {

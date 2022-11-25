@@ -1,10 +1,11 @@
 use std::path::Path;
 
-use image::{ImageBuffer, Rgb};
+use image::{ImageBuffer, Rgb, Rgba};
 use imageproc::{drawing::draw_filled_rect_mut, rect::Rect};
 
 use crate::prelude::{ColorSelector, PixelDescriptor, PixelsTable};
 
+#[derive(Debug, Clone)]
 pub struct PixelPaper<const H: usize, const W: usize> {
     pixels_table: [[PixelDescriptor; H]; W],
     block_width: usize,
@@ -39,7 +40,7 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
         }
     }
 
-    fn get_pixel_paper_image(&self) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
+    fn get_pixel_paper_image(&self) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
         let separator_pixel_length = self.separator_width;
 
         let blocks_pixel_in_height = H * self.block_width;
@@ -52,13 +53,13 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
         let separators_pixel_in_width = separators_count_in_width * separator_pixel_length;
         let width = blocks_pixel_in_width + separators_pixel_in_width;
 
-        let mut image: ImageBuffer<Rgb<u8>, Vec<u8>> =
+        let mut image: ImageBuffer<Rgba<u8>, Vec<u8>> =
             ImageBuffer::new(width as u32, height as u32);
 
         draw_filled_rect_mut(
             &mut image,
             Rect::at(0, 0).of_size(width as u32, height as u32),
-            self.background.rgb(),
+            self.background.rgba(),
         );
 
         for i in 0..separators_count_in_width as i32 {
@@ -66,7 +67,7 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
                 &mut image,
                 Rect::at(i * ((separator_pixel_length + self.block_width) as i32), 0)
                     .of_size(separator_pixel_length as u32, height as u32),
-                self.separator_color.rgb(),
+                self.separator_color.rgba(),
             )
         }
 
@@ -75,7 +76,7 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
                 &mut image,
                 Rect::at(0, i * ((separator_pixel_length + self.block_width) as i32))
                     .of_size(width as u32, separator_pixel_length as u32),
-                self.separator_color.rgb(),
+                self.separator_color.rgba(),
             )
         }
 
@@ -84,8 +85,8 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
 
     fn draw_to_image_pixels(
         &self,
-        image: &mut ImageBuffer<Rgb<u8>, Vec<u8>>,
-        color: Rgb<u8>,
+        image: &mut ImageBuffer<Rgba<u8>, Vec<u8>>,
+        color: Rgba<u8>,
         row: usize,
         column: usize,
     ) {
@@ -108,21 +109,27 @@ impl<const H: usize, const W: usize> PixelPaper<H, W> {
         }
     }
 
-    fn draw_pixels_table(&self, image: &mut ImageBuffer<Rgb<u8>, Vec<u8>>) {
+    fn draw_pixels_table(&self, image: &mut ImageBuffer<Rgba<u8>, Vec<u8>>) {
         let other_table = *self.table();
 
         for (i, row) in other_table.iter().enumerate() {
             for (j, pixel) in row.iter().enumerate() {
                 if let PixelDescriptor::Pixel(pixel) = pixel {
-                    self.draw_to_image_pixels(image, pixel.color(), j, i)
+                    self.draw_to_image_pixels(image, pixel.color().rgba(), j, i)
                 }
             }
         }
     }
 
-    pub fn save(&self, path: &str) -> Result<(), image::ImageError> {
+    pub(crate) fn get_image_buffer(&self) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
         let mut image = self.get_pixel_paper_image();
         self.draw_pixels_table(&mut image);
+
+        image
+    }
+
+    pub fn save(&self, path: &str) -> Result<(), image::ImageError> {
+        let image = self.get_image_buffer();
         image.save(Path::new(path))
     }
 }
