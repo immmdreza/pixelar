@@ -1,11 +1,11 @@
 use crate::{
     drawings::special::{FreeDrawing, StraightLine},
-    prelude::{Position, RelativePosition, ToPosition},
+    prelude::{Canvas, Position, RelativePosition, ToPosition},
 };
 
 use super::{
     surrounding_pixels::SurroundingPixels, ColorSelector, PixelDescriptor, PixelsTable,
-    RectSelection,
+    RectSelection, Selection,
 };
 
 pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable<H, W> {
@@ -168,14 +168,67 @@ pub trait MoreMethodsForPixelsTable<const H: usize, const W: usize>: PixelsTable
         self.draw_from_table_exact(&free_drawing)
     }
 
+    /// Get an rectangle like selection with specified top left and bottom right edges.
+    ///
+    /// ## Example
+    /// ```
+    /// let mut selection = pixel_paper.rect_selection(LeftTopEdge, (3, 3));
+    /// selection.apply_color(Black);
+    /// ```
     fn rect_selection<P1: ToPosition<H, W>, P2: ToPosition<H, W>>(
         &mut self,
-        start: P1,
-        end: P2,
+        top_left: P1,
+        bottom_right: P2,
     ) -> RectSelection<H, W, Self>
     where
         Self: Sized,
     {
-        RectSelection::new(self, start, end)
+        RectSelection::new(self, top_left, bottom_right)
+    }
+
+    /// Get a copy of a fixed size ( `H1`*`W1` ) section of a [`PixelsTable`].
+    ///
+    /// # Example
+    /// ```
+    /// let copy = pixel_paper.section_copy::<3, 3>(LeftTopEdge);
+    /// ```
+    fn section_copy<const H1: usize, const W1: usize>(
+        &mut self,
+        start: impl ToPosition<H, W>,
+    ) -> Canvas<H1, W1>
+    where
+        Self: Sized,
+    {
+        let mut canvas = Canvas::<H1, W1>::default();
+        let start = start.get_position();
+        let selection = self.rect_selection(start, (start.row() + H1, start.column() + W1));
+        selection.copy_to(&mut canvas, (0, 0));
+
+        canvas
+    }
+
+    /// **Cut, Modify, Replace**
+    ///
+    /// Modify a fixed size ( `H1`*`W1` ) section of this [`PixelsTable`]
+    /// separately and in place.
+    ///
+    /// ## Example
+    /// Modify a 3*3 cut starting from LeftTopEdge as a separate [`Canvas`].
+    /// ```
+    /// pixel_paper.modify_section::<3, 3>(LeftTopEdge, |canvas| {
+    ///     canvas.change_pixel_color(RightBottomEdge, Red);
+    /// });
+    /// ```
+    fn modify_section<const H1: usize, const W1: usize>(
+        &mut self,
+        start: impl ToPosition<H, W> + Clone,
+        modifier: impl FnOnce(&mut Canvas<H1, W1>),
+    ) where
+        Self: Sized,
+    {
+        let mut section = self.section_copy::<H1, W1>(start.clone());
+        modifier(&mut section);
+
+        self.draw_from_table(&section, start);
     }
 }

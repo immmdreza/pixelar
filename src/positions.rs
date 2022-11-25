@@ -1,5 +1,6 @@
 use crate::ToPosition;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LeftTopEdge;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for LeftTopEdge {
@@ -8,6 +9,7 @@ impl<const H: usize, const W: usize> ToPosition<H, W> for LeftTopEdge {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LeftBottomEdge;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for LeftBottomEdge {
@@ -16,6 +18,7 @@ impl<const H: usize, const W: usize> ToPosition<H, W> for LeftBottomEdge {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct RightTopEdge;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for RightTopEdge {
@@ -24,6 +27,7 @@ impl<const H: usize, const W: usize> ToPosition<H, W> for RightTopEdge {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct RightBottomEdge;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for RightBottomEdge {
@@ -32,6 +36,7 @@ impl<const H: usize, const W: usize> ToPosition<H, W> for RightBottomEdge {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Mid;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for Mid {
@@ -40,6 +45,7 @@ impl<const H: usize, const W: usize> ToPosition<H, W> for Mid {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct TopMid;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for TopMid {
@@ -48,6 +54,7 @@ impl<const H: usize, const W: usize> ToPosition<H, W> for TopMid {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BottomMid;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for BottomMid {
@@ -56,6 +63,7 @@ impl<const H: usize, const W: usize> ToPosition<H, W> for BottomMid {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LeftMid;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for LeftMid {
@@ -64,6 +72,7 @@ impl<const H: usize, const W: usize> ToPosition<H, W> for LeftMid {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct RightMid;
 
 impl<const H: usize, const W: usize> ToPosition<H, W> for RightMid {

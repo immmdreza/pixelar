@@ -30,6 +30,19 @@ pub trait Selection<'t> {
             }
         }
     }
+
+    fn copy_to<const H: usize, const W: usize, P: PixelsTable<H, W>, P1: ToPosition<H, W>>(
+        &'t self,
+        table: &mut P,
+        start: P1,
+    ) {
+        let start = start.get_position();
+        for (i, row) in self.selected_area().iter().enumerate() {
+            for (j, pix) in row.iter().enumerate() {
+                let _ = table.change_pixel_at((i + start.row(), j + start.column()), *pix);
+            }
+        }
+    }
 }
 
 pub struct RectSelection<'t, const H: usize, const W: usize, P: PixelsTable<H, W>> {

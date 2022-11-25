@@ -3,9 +3,10 @@ use pixelar::{
 };
 
 fn main() {
-    let mut pixel_paper = PixelPaper::<3, 3>::default();
+    let mut pixel_paper = PixelPaper::<5, 5>::default();
 
-    pixel_paper.rect_selection(0, 1).apply_color(Red);
+    let mut selection = pixel_paper.rect_selection(LeftTopEdge, (3, 3));
+    selection.apply_color(Black);
 
     pixel_paper.save("arts/simple_3.png").unwrap()
 }

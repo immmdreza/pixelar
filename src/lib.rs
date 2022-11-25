@@ -1,3 +1,5 @@
+// #![warn(missing_docs)]
+
 pub mod colors;
 pub mod drawings;
 mod pixel_paper;

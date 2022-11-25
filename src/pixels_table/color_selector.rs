@@ -1,5 +1,3 @@
-use std::ops::Add;
-
 use image::Rgb;
 
 pub trait ColorSelector {
